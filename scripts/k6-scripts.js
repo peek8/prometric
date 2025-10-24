@@ -26,15 +26,15 @@ function randomPerson() {
 // --- Scenarios ---
 export const options = {
   scenarios: {
+    // create_users: {
+    //   executor: 'constant-arrival-rate',
+    //   rate: 50, // requests per second
+    //   timeUnit: '1s',
+    //   duration: '30s',
+    //   preAllocatedVUs: 10,
+    //   exec: 'createPerson',
+    // },
     create_users: {
-      executor: 'constant-arrival-rate',
-      rate: 50, // requests per second
-      timeUnit: '1s',
-      duration: '30s',
-      preAllocatedVUs: 10,
-      exec: 'createPerson',
-    },
-    create_users_more: {
       executor: 'shared-iterations',
       vus: 50,
       iterations: 50000,
@@ -58,10 +58,22 @@ export const options = {
       startTime: '10s',
     },
     get_users: {
-      executor: 'shared-iterations',
-      vus: 20,
-      iterations: 5000,
+      executor: 'constant-arrival-rate',
+      rate: 20,
+      timeUnit: '1s',
+      duration: '10m',
+      preAllocatedVUs: 10,
       exec: 'getPerson',
+      startTime: '1s',
+    },
+
+    get_userList: {
+      executor: 'constant-arrival-rate',
+      rate: 10,
+      timeUnit: '1s',
+      duration: '10m',
+      preAllocatedVUs: 5,
+      exec: 'getPersonList',
       startTime: '1s',
     },
   },
@@ -96,5 +108,10 @@ export function deletePerson() {
 export function getPerson() {
   const id = Math.floor(Math.random() * 1000);
   http.get(`${BASE_URL}/person/${id}`);
+  sleep(0.5);
+}
+
+export function getPersonList() {
+  http.get(`${BASE_URL}/person/list`);
   sleep(0.5);
 }

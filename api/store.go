@@ -1,15 +1,20 @@
 package api
 
 import (
+	"maps"
+	"slices"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/samber/lo"
 )
 
 const (
 	// max store 100k not to flood in memory store
 	maxStoreLimits = 100 * 1000
 )
+
 var (
 	nextId = 0
 )
@@ -36,13 +41,14 @@ func newStore() *store {
 	}
 }
 
-func (s *store) list() []Person {
+func (s *store) list(start, count int) []Person {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	out := make([]Person, 0, len(s.records))
-	for _, p := range s.records {
-		out = append(out, p)
-	}
+
+	// Now it will return random values and that's okay for now
+	presons := maps.Values(s.records)
+	out := lo.Slice(slices.Collect(presons), start, start+count)
+
 	return out
 }
 
@@ -61,7 +67,7 @@ func (s *store) create(p Person) Person {
 
 	id := strconv.Itoa(nextId)
 	nextId = nextId + 1
-	
+
 	p.ID = id
 	p.CreatedAt = now
 	p.UpdatedAt = now

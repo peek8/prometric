@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -26,12 +27,12 @@ func ExposeApi() {
 
 	// Create store and seed one sample
 	s := newStore()
-	s.create(Person{FirstName: "Alice", LastName: "pit", Email: "alice@example.com"})
+	s.create(Person{FirstName: "Asraful", LastName: "haque", Email: "asraf@peek8.io"})
 
 	r := mux.NewRouter()
 
 	// API routes
-	r.HandleFunc("/person", listPersonsHandler(s)).Methods("GET")
+	r.HandleFunc("/person/list", listPersonsHandler(s)).Methods("GET")
 	r.HandleFunc("/person", createPersonHandler(s)).Methods("POST")
 	r.HandleFunc("/person/{id}", getPersonHandler(s)).Methods("GET")
 	r.HandleFunc("/person/{id}", updatePersonHandler(s)).Methods("PUT")
@@ -80,8 +81,14 @@ func instrument(path string, handler http.HandlerFunc) http.HandlerFunc {
 
 // ---------- Handlers ----------
 func listPersonsHandler(s *store) http.HandlerFunc {
-	return instrument("/person", func(w http.ResponseWriter, r *http.Request) {
-		list := s.list()
+	return instrument("/person/list", func(w http.ResponseWriter, r *http.Request) {
+		startParam := r.URL.Query().Get("start")
+		start := 0
+		if startParam != "" {
+			start, _ = strconv.Atoi(startParam)
+		}
+
+		list := s.list(start, 20)
 		personStoreCount.Set(float64(len(list)))
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(list)
