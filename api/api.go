@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
@@ -90,6 +91,9 @@ func listPersonsHandler(s *store) http.HandlerFunc {
 
 		list := s.list(start, 20)
 		personStoreCount.Set(float64(len(list)))
+		
+		time.Sleep(randomSleepTime())
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(list)
 	})
@@ -142,6 +146,9 @@ func createPersonHandler(s *store) http.HandlerFunc {
 		personCreatedTotal.Inc()
 		personStoreCount.Set(float64(s.count()))
 
+		// Sleep random seconds to add some delay to make the histogram better
+		time.Sleep(randomSleepTime())
+
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(created)
@@ -162,6 +169,8 @@ func updatePersonHandler(s *store) http.HandlerFunc {
 			http.Error(w, "person not found", http.StatusNotFound)
 			return
 		}
+		time.Sleep(randomSleepTime())
+
 		personStoreCount.Set(float64(s.count()))
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(updated)
@@ -182,4 +191,9 @@ func deletePersonHandler(s *store) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusNoContent)
 	})
+}
+
+func randomSleepTime() time.Duration {
+	// Sleep random seconds to add some delay to make the histogram better
+	return time.Duration(rand.Intn(1000)) * time.Millisecond
 }
