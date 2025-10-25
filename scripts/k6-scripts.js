@@ -1,6 +1,5 @@
 import http from 'k6/http';
 import { sleep } from 'k6';
-import { randomItem } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 const BASE_URL = 'http://localhost:8080';
 
@@ -36,7 +35,6 @@ const lastNames  = [
 ];
 
 const emails = [
-  [
     "lennielabadie@monahan.com","laurineabbott@gulgowski.org","marionwalter@miller.name","hymanprohaska@schiller.com",
     "brookssawayn@kuhic.org","laurinerenner@thompson.com","jedidiahhills@mclaughlin.info","isabellazieme@goldner.io",
     "samsonbayer@parisian.biz","sheridanmoore@moen.name","jonwolf@bednar.biz","alizalindgren@berge.net",
@@ -58,14 +56,28 @@ const emails = [
     "coykemmer@ziemann.org","dandrebuckridge@little.biz","valentinschulist@lebsack.org","bethbuckridge@corkery.name","abdielmorar@okuneva.net",
     "lanceeffertz@skiles.com","jaydamore@monahan.info","mariaflatley@adams.biz","lestersmith@mcdermott.info","shaynaemard@lesch.info",
     "rachellelind@schuppe.info","jeremyflatley@trantow.biz","claudineschroeder@durgan.io","uriahhauck@rau.name","jarengutmann@ledner.name",
-    "kailynmiller@collins.info","tyshawnmurazik@aufderhar.biz","paulinehagenes@walsh.io","eugeniastokes@aufderhar.com","samsonswaniawski@hane.info"]
+    "kailynmiller@collins.info","tyshawnmurazik@aufderhar.biz","paulinehagenes@walsh.io","eugeniastokes@aufderhar.com","samsonswaniawski@hane.info"
+]
+
+const addresses = [
+    "654 South Camptown, Reno, Oklahoma 84504","529 North Meadowhaven, Houston, Georgia 67365", "3626 Forkston, Fresno, New Jersey 60781",
+    "24741 Wayshire, Apt 796, Irving, North Dakota 52195","9282 Passagefurt, Ofc 417, Honolulu, New Jersey 34166","75546 Pointland, St. Louis, Pennsylvania 61437",
+    "816 New Ridgeland, Loft 383, San Diego, Vermont 75970","497 Millton, Chicago, Maine 55316","194 Lake Islandburgh, Apartment 437, New Orleans, Nevada 84919",
+    "7084 Stationfurt, Louisville/Jefferson, New Mexico 43107","31429 Trafficwayside, Jersey, Montana 88913","59188 Mountainsfort, Oklahoma, Ohio 73271",
+    "208 Summitborough, Corpus Christi, Pennsylvania 89162","606 Lightshaven, Rm 893, St. Paul, Nebraska 46722","3169 Walksport, Detroit, Maryland 64954",
+    "878 Gardensmouth, Houston, Wyoming 69417","32773 Lake Islandside, Chicago, Iowa 24300","6859 East Cornerborough, Floor 138, New York City, Texas 31702",
+    "6187 New Restville, Studio 118, Lexington-Fayette, Arkansas 52818","1899 Inletmouth, Office 515, Stockton, Nebraska 34725","9277 Dividefort, Austin, Nebraska 50675",
+    "780 North Greenhaven, Boston, Kansas 28308","17355 Millsside, Las Vegas, North Dakota 83133","265 East Roadtown, Penthouse 321, Indianapolis, Hawaii 83191",
+    "22672 Mountainsville, Fl 932, Laredo, Vermont 50436","118 South Spurbury, Ste 795, St. Paul, Connecticut 33230","2852 New Islefurt, Laredo, New Jersey 97825",
+    "561 Streamchester, Lexington-Fayette, Montana 39408","431 Mountainsstad, New York City, Alabama 67718","9401 Port Streamtown, Norfolk, Kentucky 59821",
 ]
 
 function randomPerson() {
   return {
-    first_name: randomItem(firstNames),
-    last_name: randomItem(lastNames),
-    email: randomItem(emails),
+    first_name: pickRandomItem(firstNames),
+    last_name: pickRandomItem(lastNames),
+    email: pickRandomItem(emails),
+    address: pickRandomItem(addresses)
   };
 }
 
@@ -160,4 +172,8 @@ export function getPerson() {
 export function getPersonList() {
   http.get(`${BASE_URL}/person/list`);
   sleep(0.5);
+}
+
+function pickRandomItem(items) {
+  return items[Math.floor(Math.random() * items.length)]
 }
