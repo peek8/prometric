@@ -48,7 +48,7 @@ func ExposeApi() {
 		fmt.Fprintln(w, "ok")
 	})
 
-	serverAddr := ":8080"
+	serverAddr := ":7080"
 	srv := &http.Server{
 		Addr:    serverAddr,
 		Handler: r,
@@ -92,7 +92,7 @@ func listPersonsHandler(s *store) http.HandlerFunc {
 		list := s.list(start, 20)
 		personStoreCount.Set(float64(len(list)))
 		
-		time.Sleep(randomSleepTime())
+		time.Sleep(randomSleepTime(1))
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(list)
@@ -110,6 +110,9 @@ func getPersonHandler(s *store) http.HandlerFunc {
 			return
 		}
 		personStoreCount.Set(float64(s.count()))
+
+		time.Sleep(randomSleepTime(1))
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(p)
 	})
@@ -147,7 +150,7 @@ func createPersonHandler(s *store) http.HandlerFunc {
 		personStoreCount.Set(float64(s.count()))
 
 		// Sleep random seconds to add some delay to make the histogram better
-		time.Sleep(randomSleepTime())
+		time.Sleep(randomSleepTime(2))
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
@@ -169,7 +172,7 @@ func updatePersonHandler(s *store) http.HandlerFunc {
 			http.Error(w, "person not found", http.StatusNotFound)
 			return
 		}
-		time.Sleep(randomSleepTime())
+		time.Sleep(randomSleepTime(2))
 
 		personStoreCount.Set(float64(s.count()))
 		w.Header().Set("Content-Type", "application/json")
@@ -193,7 +196,7 @@ func deletePersonHandler(s *store) http.HandlerFunc {
 	})
 }
 
-func randomSleepTime() time.Duration {
+func randomSleepTime(maxTimeSec int) time.Duration {
 	// Sleep random seconds to add some delay to make the histogram better
-	return time.Duration(rand.Intn(1000)) * time.Millisecond
+	return time.Duration(rand.Intn(maxTimeSec * 1000)) * time.Millisecond
 }
