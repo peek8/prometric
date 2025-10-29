@@ -84,14 +84,6 @@ function randomPerson() {
 // --- Scenarios ---
 export const options = {
   scenarios: {
-    // create_users: {
-    //   executor: 'constant-arrival-rate',
-    //   rate: 50, // requests per second
-    //   timeUnit: '1s',
-    //   duration: '30s',
-    //   preAllocatedVUs: 10,
-    //   exec: 'createPerson',
-    // },
     create_users: {
       executor: 'shared-iterations',
       vus: 50,
@@ -103,17 +95,17 @@ export const options = {
       executor: 'constant-arrival-rate',
       rate: 5, // 5 req/s
       timeUnit: '1s',
-      duration: '30s',
+      duration: '5m',
       preAllocatedVUs: 5,
       exec: 'updatePerson',
-      startTime: '2s', // slight delay
+      startTime: '5s', // slight delay
     },
     delete_users: {
       executor: 'shared-iterations',
-      vus: 10,
-      iterations: 100,
+      vus: 2,
+      iterations: 500,
       exec: 'deletePerson',
-      startTime: '10s',
+      startTime: '30s',
     },
     get_users: {
       executor: 'constant-arrival-rate',
@@ -122,7 +114,7 @@ export const options = {
       duration: '10m',
       preAllocatedVUs: 10,
       exec: 'getPerson',
-      startTime: '1s',
+      startTime: '5s',
     },
 
     get_userList: {
@@ -132,7 +124,7 @@ export const options = {
       duration: '10m',
       preAllocatedVUs: 5,
       exec: 'getPersonList',
-      startTime: '1s',
+      startTime: '5s',
     },
   },
 };

@@ -27,7 +27,15 @@ var (
 			Name: "http_requests_total",
 			Help: "Total number of HTTP requests processed, labeled by status code and method.",
 		},
-		[]string{"code", "method"},
+		[]string{"code", "method", "path"},
+	)
+
+	httpStatusCode = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "http_status_code",
+			Help: "HTTP Status Codes",
+		},
+		[]string{"code"},
 	)
 
 	httpRequestsInProgress = prometheus.NewGaugeVec(
@@ -88,6 +96,7 @@ var (
 func initMetrics() {
 	prometheus.MustRegister(
 		httpRequestsTotal, 
+		httpStatusCode,
 		httpRequestsInProgress, 
 		httpRequestDuration, 
 		personStoreCount, 

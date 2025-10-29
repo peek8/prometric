@@ -48,7 +48,7 @@ func ExposeApi() {
 		fmt.Fprintln(w, "ok")
 	})
 
-	serverAddr := ":7080"
+	serverAddr := "0.0.0.0:7080"
 	srv := &http.Server{
 		Addr:    serverAddr,
 		Handler: r,
@@ -75,7 +75,8 @@ func instrument(path string, handler http.HandlerFunc) http.HandlerFunc {
 
 		duration := time.Since(start).Seconds()
 		httpRequestDuration.WithLabelValues(method, path).Observe(duration)
-		httpRequestsTotal.WithLabelValues(fmt.Sprint(rr.statusCode), method).Inc()
+		httpRequestsTotal.WithLabelValues(fmt.Sprint(rr.statusCode), method, path).Inc()
+		httpStatusCode.WithLabelValues(fmt.Sprint(rr.statusCode)).Inc()
 		httpRequestsInProgress.WithLabelValues(method).Dec()
 	}
 }
