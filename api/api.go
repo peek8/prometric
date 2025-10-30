@@ -91,7 +91,7 @@ func listPersonsHandler(s *store) http.HandlerFunc {
 		}
 
 		list := s.list(start, 20)
-		personStoreCount.Set(float64(len(list)))
+		personStoreCount.Set(float64(s.count()))
 		
 		time.Sleep(randomSleepTime(1))
 

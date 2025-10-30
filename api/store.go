@@ -1,13 +1,9 @@
 package api
 
 import (
-	"maps"
-	"slices"
 	"strconv"
 	"sync"
 	"time"
-
-	"github.com/samber/lo"
 )
 
 const (
@@ -46,11 +42,18 @@ func (s *store) list(start, count int) []Person {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
+	i := 0
+	var res []Person
 	// Now it will return random values and that's okay for now
-	presons := maps.Values(s.records)
-	out := lo.Slice(slices.Collect(presons), start, start+count)
+	for _, p := range s.records {
+		res = append(res, p)
+		i++
+		if i == count {
+			break
+		}
+	}
 
-	return out
+	return res
 }
 
 func (s *store) get(id string) (Person, bool) {

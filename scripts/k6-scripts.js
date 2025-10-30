@@ -103,7 +103,7 @@ export const options = {
     delete_users: {
       executor: 'shared-iterations',
       vus: 2,
-      iterations: 500,
+      iterations: 1500,
       exec: 'deletePerson',
       startTime: '30s',
     },

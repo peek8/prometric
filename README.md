@@ -50,7 +50,7 @@ I use [Grafan k6](https://k6.io/) to generate traffic against the prometric API.
 - Tries to get Person by Random Id for 10 mins (20.00 iterations/s for 10m0s, maxVUs: 10).
 - Tries to get Person list  for 10 mins (10.00 iterations/s for 10m0s, maxVUs: 5).
 - Updates the Person for 5 mins (5.00 iterations/s for 2m0s, maxVUs: 5).
-- Deletes about 500 Persons randomly within 10 mins (500 iterations shared among 2 VUs,maxDuration: 10m0s).
+- Deletes about 500 Persons randomly within 10 mins (1500 iterations shared among 2 VUs,maxDuration: 10m0s).
 
 These above iterations are enough to generate some adequate prometheus metrics which can be used to play with prometheus and grafana dashboard.
 
